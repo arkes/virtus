@@ -6,7 +6,7 @@ module Virtus
     # Handles coercing members to the designated member type.
     #
     class Collection < Attribute
-      default Proc.new { |_, attribute| attribute.primitive.new }
+      default Proc.new { |_, attribute| attribute.primitive.new(type: attribute.member_type.primitive) }
 
       # @api private
       attr_reader :member_type
@@ -75,7 +75,7 @@ module Virtus
 
         return coerced unless coerced.respond_to?(:each_with_object)
 
-        coerced.each_with_object(primitive.new) do |entry, collection|
+        coerced.each_with_object(primitive.new(type: member_type.primitive)) do |entry, collection|
           collection << member_type.coerce(entry)
         end
       end
